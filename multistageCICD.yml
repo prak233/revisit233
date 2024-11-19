@@ -23,5 +23,34 @@ stages:
     
     - task: DotNetCoreCLI@2
       name: 'build'
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: '-c $(buildconfig)'
+    
+    - task: DotNetCoreCLI@2
+      name: 'publish'
+      inputs:
+        command: publish
+        projects: '**/*csproj'
+        arguments: '-c $(buildConfig) -o $(build.stagingDirectory)'
+    
+    - task: PublishBuildArtifacts@1
+      name: 'publishArtifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'box'
+        publishLocation: 'Container'
+        StoreAsTar: true
+
+# - stage: 'CD'
+#   jobs:
+#   - job: 'deployToTest'
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     steps:
+#     - task: DownloadBuildArtifacts@1
       
+
+
 
