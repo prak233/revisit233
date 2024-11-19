@@ -67,7 +67,7 @@ stages:
       inputs:
         buildType: 'current'
         artifactName: 'box'
-        targetPath: '$(Pipeline.Workspace)'
+
       
 
   - job: 'deployToProd'
