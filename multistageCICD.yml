@@ -4,14 +4,22 @@
 # https://aka.ms/yaml
 
 trigger:
-- none
+ branches:
+   include:
+   - feature/test
+
+   exclude:
+   - main
+   - feature/dev
+
+ batch: true
 
 stages:
 - stage: 'CI'
   jobs:
   - job: 'Buildjob'
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'ubuntu-latest'
     steps:
     - task: DotNetCoreCLI@2
       name: 'release'
