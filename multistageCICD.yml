@@ -4,15 +4,8 @@
 # https://aka.ms/yaml
 
 trigger:
- branches:
-   include:
-   - feature/test
+- none
 
-   exclude:
-   - main
-   - feature/dev
-
- batch: true
 
 stages:
 - stage: 'CI'
@@ -46,19 +39,41 @@ stages:
     - task: PublishBuildArtifacts@1
       name: 'publishArtifact'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        PathtoPublish: '$(build.stagingDirectory)'
         ArtifactName: 'box'
         publishLocation: 'Container'
         StoreAsTar: true
 
-# - stage: 'CD'
-#   jobs:
-#   - job: 'deployToTest'
-#     pool:
-#       vmImage: 'ubuntu-latest'
-#     steps:
-#     - task: DownloadBuildArtifacts@1
+- stage: 'CD'
+  jobs:
+  - job: 'deployToTest'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'box'
+        downloadPath: '$(build.stagingDirectory)'
+    
+    
+
+  - job: 'deployToDev'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'box'
+        targetPath: '$(Pipeline.Workspace)'
       
 
-
+  - job: 'deployToProd'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - download: 'current'
+      artifact: 'box'
 
