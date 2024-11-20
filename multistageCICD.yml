@@ -1,26 +1,33 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
+
 # https://aka.ms/yaml
 
 trigger:
-- none
+  branches:
+  
+   include:     ##only 'feature/test' branch runs
+   - feature/*
+   - main
 
+   exclude:
+   - feature/dev
+   - main
 
+  batch: true   ##used to queue multiple Pipeline runs in serial order
+
+variables:
+  projectName: '**/*.csproj'
 
 ##CI stage
 stages:
 - stage: 'CI'
   jobs:
   - job: 'Buildjob'
-    pool:
-      vmImage: 'ubuntu-latest'
     steps:
     - task: DotNetCoreCLI@2
       name: 'release'
       inputs:
         command: 'restore'
-        projects: '**/*.csproj'
+        projects: '$(projectName)'
         feedsToUse: 'select'
         vstsFeed: 'cc6c5f41-bf3b-4a38-b0fb-b5b6523620f8'
     
@@ -28,14 +35,14 @@ stages:
       name: 'build'
       inputs:
         command: build
-        projects: '**/*.csproj'
+        projects: '$(projectName)'
         arguments: '-c $(buildconfig)'
     
     - task: DotNetCoreCLI@2
       name: 'publish'
       inputs:
         command: publish
-        projects: '**/*csproj'
+        projects: '$(projectName)'
         arguments: '-c $(buildConfig) -o $(build.stagingDirectory)'
     
     - task: PublishBuildArtifacts@1
