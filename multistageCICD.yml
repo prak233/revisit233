@@ -50,7 +50,7 @@ stages:
 - stage: 'TEST'
   dependsOn: 'CI'
   jobs:
-  - job: 'deployToTest'     ##deploy to TEST env
+  - job:     ##deploy to TEST env
     displayName: 'deployToTest'
     steps:
     - task: DownloadBuildArtifacts@1
@@ -75,7 +75,7 @@ stages:
 - stage: 'DEV'
   dependsOn: 'TEST'
   jobs:
-  - job: 'deployToDev'        ##deploy to DEV env
+  - job:        ##deploy to DEV env
     displayName: 'deployToDev'
     steps:
     - task: DownloadPipelineArtifact@2        #Download Artifact using Pipeline Artifact
@@ -95,8 +95,8 @@ stages:
 - stage: 'PROD'
   dependsOn: 'DEV'
   jobs:
-  - job: 'deployToProd'     ##deploy to PROD env
-    displayName: 'PROD'
+  - job:     ##deploy to PROD env
+    displayName: 'deployToProd'
     pool:
       vmImage: 'ubuntu-latest'
     steps:
