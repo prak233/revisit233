@@ -2,7 +2,7 @@
 #reference pipeline
 
 parameters:
-  buildConfig: 'release'
+  buildConfig: 'aa'
 
 ##CI Build
 steps:
@@ -25,3 +25,10 @@ steps:
     command: 'publish'
     projects: '**/*.csproj'
     arguments: '--configuration ${{parameters.buildConfig}} -o ${build.StagingDirectory}/${{parameters.buildConfig}}'
+
+- task: PublishBuildArtifacts@1
+  name: 'publishArtifact'           ##publish build Artifiact
+  inputs:
+      PathtoPublish: '$(build.stagingDirectory)'
+      ArtifactName: 'repo'
+      publishLocation: 'Container'

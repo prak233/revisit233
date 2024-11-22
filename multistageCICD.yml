@@ -28,13 +28,6 @@ stages:
       parameters:
        buildConfig: 'debug' 
 
-    - task: PublishBuildArtifacts@1
-      name: 'publishArtifact'
-      inputs:
-        PathtoPublish: '$(build.stagingDirectory)'
-        ArtifactName: 'repo'
-        publishLocation: 'Container'
-
 
 # ##CD stage
 # - stage: 'TEST'
