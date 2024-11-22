@@ -26,7 +26,14 @@ stages:
     
     - template: buildp.yml
       parameters:
-       buildConfig: 'debug' 
+       buildConfig: 'debug'
+
+    - task: PublishBuildArtifacts@1
+      name: 'publishArtifact'           ##publish build Artifiact
+      inputs:
+        PathtoPublish: '$(build.stagingDirectory)'
+        ArtifactName: 'repo'
+        publishLocation: 'Container'
 
 
 # ##CD stage
