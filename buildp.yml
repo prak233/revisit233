@@ -1,6 +1,9 @@
 #restore,build&publish pipeline
 #reference pipeline
 
+parameters:
+  buildConfig: 'release'
+
 ##CI Build
 steps:
 - task: DotNetCoreCLI@2     ##release
@@ -14,11 +17,11 @@ steps:
   inputs:
     command: build
     projects: '**/*.csproj'
-    arguments: '--configuration ${buildConfig}'
+    arguments: '--configuration ${{parameters.buildConfig}}'
 
 - task: DotNetCoreCLI@2     ##publish
   displayName: 'publish'
   inputs:
     command: 'publish'
     projects: '**/*.csproj'
-    arguments: '--configuration ${buildConfig} -o ${build.StagingDirectory}'
+    arguments: '--configuration ${{parameters.buildConfig}} -o ${build.StagingDirectory}/${{parameters.buildConfig}}'
