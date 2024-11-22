@@ -33,7 +33,7 @@ stages:
     - task: PublishBuildArtifacts@1
       name: 'publishArtifact'           ##publish build Artifiact
       inputs:
-        PathtoPublish: 's/**/$(build.stagingDirectory)'
+        PathtoPublish: '$(build.StagingDirectory)'
         ArtifactName: 'repo'
         publishLocation: 'Container'
 
