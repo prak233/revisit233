@@ -32,7 +32,7 @@ stages:
       name: 'publishArtifact'
       inputs:
         PathtoPublish: '$(build.stagingDirectory)'
-        ArtifactName: 'box'
+        ArtifactName: 'repo'
         publishLocation: 'Container'
 
 
