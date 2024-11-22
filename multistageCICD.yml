@@ -19,6 +19,8 @@ stages:
 - stage: 'CI'
   jobs:
   - job: 'Buildjob'
+    pool:
+      vmImage: 'windows-latest'
     steps:
     - template: buildp.yml
       parameters:
