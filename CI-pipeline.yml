@@ -1,0 +1,37 @@
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: DotNetCoreCLI@2
+  name: 'restore'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+    vstsFeed: 'cc6c5f41-bf3b-4a38-b0fb-b5b6523620f8'
+
+- task: DotNetCoreCLI@2
+  name: 'build'
+  inputs:
+    command: build
+    projects: '**/*.csproj'
+    arguments: '-c ${buildconfiguration}'
+
+- task: DotNetCoreCLI@2
+  name: 'publish'
+  inputs:
+    command: publish
+    projects: '**/*.csproj'
+    arguments: '-c ${buildconfig} -o ${build.stagingDirectory}'
+
+- task: PublishBuildArtifacts@1
+  name: 'publishArtifact'
+  inputs:
+    PathtoPublish: '${build.stagingDirectory}'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

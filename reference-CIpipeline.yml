@@ -1,0 +1,20 @@
+trigger:
+  branches:
+    include:
+    - none
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- template: 'buildp.yml'
+  parameters:
+    buildConfig: 'debug'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+   PathtoPublish: '${build.StagingDirectory}'
+   ArtifactName: 'drop'
+   publishLocation: 'Container'
+
+
