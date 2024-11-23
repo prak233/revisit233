@@ -42,7 +42,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: 'publish Artifact'
       inputs:
-        targetPath: '$(Pipeline.Workspace)'
+        targetPath: '$(build.stagingDirectory)'
         artifact: 'depo'
         publishLocation: pipeline
         
