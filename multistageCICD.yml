@@ -9,7 +9,7 @@ trigger:
    - main
 
    exclude:
-   - feature/dev
+   - feature/*
    - main
 
   batch: true   ##used to queue multiple Pipeline runs in serial order
@@ -38,70 +38,70 @@ stages:
         publishLocation: 'Container'
 
 
-# ##CD stage
-# - stage: 'TEST'
-#   dependsOn: 'CI'
-#   jobs:
-#   - job:     ##deploy to TEST env
-#     displayName: 'deployToTest'
-#     steps:
-#     - task: DownloadBuildArtifacts@1
-#       displayName: 'Download Build Artifact' 
-#       inputs:
-#         buildType: 'current'
-#         downloadType: 'single'
-#         artifactName: 'box'
-#         downloadPath: '$(System.ArtifactsDirectory)'
+##CD stage
+- stage: 'TEST'
+  dependsOn: 'CI'
+  jobs:
+  - job:     ##deploy to TEST env
+    displayName: 'deployToTest'
+    steps:
+    - task: DownloadBuildArtifacts@1
+      displayName: 'Download Build Artifact' 
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'box'
+        downloadPath: '$(System.ArtifactsDirectory)'
 
-#     - task: AzureRmWebAppDeployment@4     #Deploy to Azure Web App - TEST
-#       displayName: 'Deploy to TEST Azure Web App'
-#       inputs:
-#         ConnectionType: 'AzureRM'
-#         azureSubscription: 'Pay-As-You-Go(1)(52ebb814-d1d8-427b-badb-92e9e2108392)'
-#         appType: 'webApp'
-#         WebAppName: 'revisitapp-test'
-#         packageForLinux: '$(pipeline.workspace)/**/*.zip'
-
-
-
-# - stage: 'DEV'
-#   dependsOn: 'TEST'
-#   jobs:
-#   - job:        ##deploy to DEV env
-#     displayName: 'deployToDev'
-#     steps:
-#     - task: DownloadPipelineArtifact@2        #Download Artifact using Pipeline Artifact
-#       inputs:
-#         buildType: 'current'
-#         artifactName: 'box'
-
-#     - task: AzureRmWebAppDeployment@4       #Deploy to Azure Web App - DEV
-#       inputs:
-#         ConnectionType: 'AzureRM'
-#         azureSubscription: 'Pay-As-You-Go(1)(52ebb814-d1d8-427b-badb-92e9e2108392)'
-#         appType: 'webApp'
-#         WebAppName: 'revisitapp-dev'
-#         packageForLinux: '$(pipeline.workspace)/**/*.zip'
+    - task: AzureRmWebAppDeployment@4     #Deploy to Azure Web App - TEST
+      displayName: 'Deploy to TEST Azure Web App'
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(1)(52ebb814-d1d8-427b-badb-92e9e2108392)'
+        appType: 'webApp'
+        WebAppName: 'revisitapp-test'
+        packageForLinux: '$(pipeline.workspace)/**/*.zip'
 
 
-# - stage: 'PROD'
-#   dependsOn: 'DEV'
-#   jobs:
-#   - job:     ##deploy to PROD env
-#     displayName: 'deployToProd'
-#     pool:
-#       vmImage: 'ubuntu-latest'
-#     steps:
-#     - download: 'current'           #Download Artifact using Pipeline Artifact
-#       artifact: 'box'
 
-#     - task: AzureRmWebAppDeployment@4               #Deploy to Azure Web App - PROD
-#       inputs:
-#         ConnectionType: 'AzureRM'
-#         azureSubscription: 'Pay-As-You-Go(1)(52ebb814-d1d8-427b-badb-92e9e2108392)'
-#         appType: 'webApp'
-#         WebAppName: 'revisitapp-prod'
-#         deployToSlotOrASE: true
-#         ResourceGroupName: 'revisit-rg'
-#         SlotName: 'revisitapp-prod-staging'
-#         packageForLinux: '$(pipeline.workspace)/**/*.zip'
+- stage: 'DEV'
+  dependsOn: 'TEST'
+  jobs:
+  - job:        ##deploy to DEV env
+    displayName: 'deployToDev'
+    steps:
+    - task: DownloadPipelineArtifact@2        #Download Artifact using Pipeline Artifact
+      inputs:
+        buildType: 'current'
+        artifactName: 'box'
+
+    - task: AzureRmWebAppDeployment@4       #Deploy to Azure Web App - DEV
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(1)(52ebb814-d1d8-427b-badb-92e9e2108392)'
+        appType: 'webApp'
+        WebAppName: 'revisitapp-dev'
+        packageForLinux: '$(pipeline.workspace)/**/*.zip'
+
+
+- stage: 'PROD'
+  dependsOn: 'DEV'
+  jobs:
+  - job:     ##deploy to PROD env
+    displayName: 'deployToProd'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - download: 'current'           #Download Artifact using Pipeline Artifact
+      artifact: 'box'
+
+    - task: AzureRmWebAppDeployment@4               #Deploy to Azure Web App - PROD
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(1)(52ebb814-d1d8-427b-badb-92e9e2108392)'
+        appType: 'webApp'
+        WebAppName: 'revisitapp-prod'
+        deployToSlotOrASE: true
+        ResourceGroupName: 'revisit-rg'
+        SlotName: 'revisitapp-prod-staging'
+        packageForLinux: '$(pipeline.workspace)/**/*.zip'
