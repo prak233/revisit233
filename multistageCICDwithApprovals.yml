@@ -48,4 +48,8 @@ stages:
         artifact: 'depo'
         publishLocation: pipeline
         
-      
+
+- stage: CD
+  dependsOn: CI
+  
+    
