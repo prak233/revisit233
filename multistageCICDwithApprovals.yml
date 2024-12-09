@@ -75,7 +75,7 @@ stages:
                 [{"protocol":"http",
                 "ipAddress": "All Unassigned",
                 "port": "80",
-                "hostname": "calculator.com",
+                "hostname": "",
                 "sslThumbprint":"",
                 "sniFlag":false}]
               }'
