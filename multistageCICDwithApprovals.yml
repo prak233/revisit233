@@ -61,7 +61,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          
           - task: IISWebAppManagementOnMachineGroup@0
             inputs:
               IISDeploymentType: 'IISWebsite'
@@ -88,4 +87,4 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
               WebSiteName: 'Default Web Site'
-              Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
+              Package: '$(pipeline.workspace)\**\*.zip'
