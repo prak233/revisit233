@@ -51,5 +51,41 @@ stages:
 
 - stage: CD
   dependsOn: CI
-  
+  jobs:
+  - deployment: 'deployToVmJob'
+    environment: 
+      name: myRevisitpools
+      resourceType: virtualmachine
     
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          
+          - task: IISWebAppManagementOnMachineGroup@0
+            inputs:
+              IISDeploymentType: 'IISWebsite'
+              ActionIISWebsite: 'CreateOrUpdateWebsite'
+              WebsiteName: 'Default Web Site'
+              WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+              WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+              AddBinding: true
+              ParentWebsiteNameForVD: 'Default Web Site'
+              ParentWebsiteNameForApplication: 'Default Web Site'
+              Bindings: '{ "bindings":
+                [{"protocol":"http",
+                "ipAddress": "All Unassigned",
+                "port": "80",
+                "hostname": "calculator.com",
+                "sslThumbprint":"",
+                "sniFlag":false}]
+              }'
+           
+          - powershell: |
+              Invoke-WebRequest "https://download.visualstudio.microsoft.com/download/pr/d489c5d0-4d0f4622-ab93-b0f2a3e92eed/101a2fae29a291956d402377b941f401/dotnet-hosting-7.0.10-win.exe" -outfile $env:temp\DotNetCore.WindowsHosting.exe
+              Start-Process $env:temp\DotNetCore.WindowsHosting.exe -ArgumentList '/quiet' -Wait
+          
+          - task: IISWebAppDeploymentOnMachineGroup@0
+            inputs:
+              WebSiteName: 'Default Web Site'
+              Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
