@@ -61,6 +61,16 @@ stages:
       runOnce:
         deploy:
           steps:
+
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                Invoke-WebRequest "https://download.visualstudio.microsoft.com/download/pr/d489c5d0-4d0f4622-ab93-b0f2a3e92eed/101a2fae29a291956d402377b941f401/dotnet-hosting-7.0.10-win.exe" -outfile $env:temp\DotNetCore.WindowsHosting.exe
+                Start-Process $env:temp\DotNetCore.WindowsHosting.exe -ArgumentList '/quiet' -Wait
+              errorActionPreference: 'silentlyContinue'
+
+
           - task: IISWebAppManagementOnMachineGroup@0
             inputs:
               IISDeploymentType: 'IISWebsite'
@@ -71,18 +81,9 @@ stages:
               AddBinding: true
               ParentWebsiteNameForVD: 'Default Web Site'
               ParentWebsiteNameForApplication: 'Default Web Site'
-              Bindings: '{ "bindings":
-                [{"protocol":"http",
-                "ipAddress": "All Unassigned",
-                "port": "80",
-                "hostname": "",
-                "sslThumbprint":"",
-                "sniFlag":false}]
-              }'
-           
-          - powershell: |
-              Invoke-WebRequest "https://download.visualstudio.microsoft.com/download/pr/d489c5d0-4d0f4622-ab93-b0f2a3e92eed/101a2fae29a291956d402377b941f401/dotnet-hosting-7.0.10-win.exe" -outfile $env:temp\DotNetCore.WindowsHosting.exe
-              Start-Process $env:temp\DotNetCore.WindowsHosting.exe -ArgumentList '/quiet' -Wait
+              Bindings: '{"bindings": [{"protocol": "http","ipAddress": "All Unassigned","port": "80","hostname":"calculator.com","sslThumbprint": "","sniFlag": false}]}'
+              
+          
           
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
