@@ -64,14 +64,13 @@ stages:
 
           - task: IISWebAppManagementOnMachineGroup@0
             inputs:
+              EnableIIS: true
               IISDeploymentType: 'IISWebsite'
               ActionIISWebsite: 'CreateOrUpdateWebsite'
               WebsiteName: 'Default Web Site'
               WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
               WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
               AddBinding: true
-              ParentWebsiteNameForVD: 'Default Web Site'
-              ParentWebsiteNameForApplication: 'Default Web Site'
               Bindings: '{"bindings": [{"protocol": "http","ipAddress": "All Unassigned","port": "80","hostname":"calculator.com","sslThumbprint": "","sniFlag": false}]}'
               
           - powershell: |
