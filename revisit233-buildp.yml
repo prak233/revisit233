@@ -1,8 +1,6 @@
 #Child pipeline
 # https://aka.ms/yaml
 
-trigger:
-- none
 
 parameters:
   buildConfig: 'xyz'
@@ -10,11 +8,8 @@ parameters:
 pool:
   vmImage: windows-latest
 
-stages:
-- stage: CI
-  jobs:
-  - job: buildjob
-    steps:
+
+steps:
     - task: DotNetCoreCLI@2
       displayName: restoretask
       inputs:
