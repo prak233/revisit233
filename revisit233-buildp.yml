@@ -30,6 +30,7 @@ stages:
         arguments: '-c ${{parameters.buildConfig}}'
     
     - task: DotNetCoreCLI@2
+      displayName: publishtask
       inputs:
         command: 'publish'
         projects: $(projectName)
