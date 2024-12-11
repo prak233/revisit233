@@ -5,10 +5,6 @@
 parameters:
   buildConfig: 'xyz'
 
-pool:
-  vmImage: windows-latest
-
-
 steps:
     - task: DotNetCoreCLI@2
       displayName: restoretask
