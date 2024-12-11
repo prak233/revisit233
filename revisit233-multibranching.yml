@@ -1,7 +1,35 @@
 #parent multistaging pipeline
 
-template:
-  
+trigger:
+    branches:
+        include:
+        - feature/test
+
+        exclude:
+        - feature/dev
+        - main
+
+pool:
+    vmImage: windows-latest
+
+stages:
+
+##CI Stage
+- stage: CI             
+  displayName: StageCI
+  jobs:
+    - job: buildJob
+      steps:
+      - template: revisit233-buildp.yml     #calling build yaml file as child pipeline
+        parameters:
+            buildConfig: 'debug'
+        
+      - task: PublishBuildArtifacts@1
+        displayName: publish Artifact
+        inputs:
+          PathtoPublish: '$(build.stagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
 
 
 
