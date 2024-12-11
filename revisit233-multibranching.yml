@@ -20,12 +20,16 @@ stages:
   jobs:
     - job: buildJob
       steps:
-      - template: revisit233-buildp.yml     #calling build yaml file as child pipeline
+      - template: revisit233-buildp.yml     #calling build yaml file as child pipeline with repository as 'debug'
         parameters:
             buildConfig: 'debug'
-        
+    
+      - template: revisit233-buildp.yml
+        parameters:
+            buildConfig: 'debug2'       #calling build yaml file as child pipeline with repository as 'debug2'
+
       - task: PublishBuildArtifacts@1
-        displayName: publish Artifact
+        displayName: publish artifact task
         inputs:
           PathtoPublish: '$(build.stagingDirectory)'
           ArtifactName: 'drop'
