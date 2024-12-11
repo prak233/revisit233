@@ -7,21 +7,21 @@ parameters:
 
 steps:
     - task: DotNetCoreCLI@2
-      displayName: restoretask
+      displayName: 'restoretask - ${{parameters.buildConfig}}'
       inputs:
         command: 'restore'
         projects: '$(projectName)'
         feedsToUse: 'select'
     
     - task: DotNetCoreCLI@2
-      displayName: buildtask
+      displayName: 'buildtask - ${{parameters.buildConfig}}'
       inputs:
         command: 'build'
         projects: '$(projectName)'
         arguments: '-c ${{parameters.buildConfig}}'
     
     - task: DotNetCoreCLI@2
-      displayName: publishtask
+      displayName: 'publishtask - ${{parameters.buildConfig}}'
       inputs:
         command: 'publish'
         projects: $(projectName)
