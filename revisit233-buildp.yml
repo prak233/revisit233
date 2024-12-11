@@ -30,4 +30,4 @@ steps:
         command: 'publish'
         projects: $(projectName)
         publishWebProjects: true
-        arguments: '-c ${{parameters.buildConfig}} -o $(build.stagingDirectory)'
+        arguments: '-c ${{parameters.buildConfig}} -o $(build.stagingDirectory)/${{parameters.buildConfig}}'
