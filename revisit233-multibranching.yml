@@ -26,7 +26,7 @@ stages:
     
       - template: revisit233-buildp.yml
         parameters:
-            buildConfig: 'debug2'       #calling build yaml file as child pipeline with repository as 'debug2'
+            buildConfig: 'backup'       #calling build yaml file as child pipeline with repository as 'debug2'
 
       - task: PublishBuildArtifacts@1
         displayName: publish artifact task
