@@ -3,11 +3,8 @@
 trigger:
     branches:
         include:
-        - feature/test
-
-        exclude:
-        - feature/dev
         - main
+        - feature/*
 
 pool:
     vmImage: windows-latest
@@ -38,6 +35,7 @@ stages:
 
 - stage: TEST
   displayName: TEST
+  dependsOn: CI
   condition: contains(variables['Build.SourceBranch'],'refs/heads/feature/test')
   jobs:
   - deployment: deployToTest
