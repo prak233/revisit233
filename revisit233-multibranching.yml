@@ -40,6 +40,109 @@ stages:
   displayName: StageCD
   jobs:
   - deployment: deployToTest
-    environment: MymultiPools
-    
+    displayName: 'TestEnv'
+    environment: 
+      name: 'MymultiPools'
+      resourceType: Virtualmachine
+      tags: test
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: IISWebAppManagementOnMachineGroup@0
+            displayName: IIS setup
+            inputs:
+              EnableIIS: true
+              IISDeploymentType: 'IISWebsite'
+              ActionIISWebsite: 'CreateOrUpdateWebsite'
+              WebsiteName: 'Default Web Site'
+              WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+              WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+              AddBinding: true
+              Bindings: '{"bindings": [{"protocol": "http","ipAddress": "All Unassigned","port": "80","hostname":"calculator.com","sslThumbprint": "","sniFlag": false}]}'
+              
+          - powershell: |
+              Invoke-WebRequest "https://download.visualstudio.microsoft.com/download/pr/4956ec5e-8502-4454-8f28-40239428820f/e7181890eed8dfa11cefbf817c4e86b0/dotnet-hosting-8.0.11-win.exe" -outfile $env:temp\DotNetCore.WindowsHosting.exe
+              Start-Process $env:temp\DotNetCore.WindowsHosting.exe -ArgumentList '/quiet' -Wait
+          
+          - task: IISWebAppDeploymentOnMachineGroup@0
+            displayName: 'website deployed in IIS'
+            inputs:
+              WebSiteName: 'Default Web Site'
+              Package: '$(pipeline.workspace)\**\*.zip'
+              TakeAppOfflineFlag: true
+              XmlVariableSubstitution: true
+
+
+  - deployment: deployToDev
+    dependsOn: deployToTest
+    displayName: 'DevEnv'
+    environment:
+      name: 'MymultiPools'
+      resourceType: virtualmachine
+      tags: test
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: IISWebAppManagementOnMachineGroup@0
+            displayName: IIS setup
+            inputs:
+              EnableIIS: true
+              IISDeploymentType: 'IISWebsite'
+              ActionIISWebsite: 'CreateOrUpdateWebsite'
+              WebsiteName: 'Default Web Site'
+              WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+              WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+              AddBinding: true
+              Bindings: '{"bindings": [{"protocol": "http","ipAddress": "All Unassigned","port": "80","hostname":"calculator.com","sslThumbprint": "","sniFlag": false}]}'
+              
+          - powershell: |
+              Invoke-WebRequest "https://download.visualstudio.microsoft.com/download/pr/4956ec5e-8502-4454-8f28-40239428820f/e7181890eed8dfa11cefbf817c4e86b0/dotnet-hosting-8.0.11-win.exe" -outfile $env:temp\DotNetCore.WindowsHosting.exe
+              Start-Process $env:temp\DotNetCore.WindowsHosting.exe -ArgumentList '/quiet' -Wait
+          
+          - task: IISWebAppDeploymentOnMachineGroup@0
+            displayName: 'website deployed in IIS'
+            inputs:
+              WebSiteName: 'Default Web Site'
+              Package: '$(pipeline.workspace)\**\*.zip'
+              TakeAppOfflineFlag: true
+              XmlVariableSubstitution: true
+
+
+  - deployment: deployToProd
+    displayName: 'ProdEnv'
+    dependsOn: deployToDev
+    environment:
+      name: MymultiPools
+      resourceType: virtualmachine
+      tags: prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: IISWebAppManagementOnMachineGroup@0
+            displayName: IIS setup
+            inputs:
+              EnableIIS: true
+              IISDeploymentType: 'IISWebsite'
+              ActionIISWebsite: 'CreateOrUpdateWebsite'
+              WebsiteName: 'Default Web Site'
+              WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+              WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+              AddBinding: true
+              Bindings: '{"bindings": [{"protocol": "http","ipAddress": "All Unassigned","port": "80","hostname":"calculator.com","sslThumbprint": "","sniFlag": false}]}'
+              
+          - powershell: |
+              Invoke-WebRequest "https://download.visualstudio.microsoft.com/download/pr/4956ec5e-8502-4454-8f28-40239428820f/e7181890eed8dfa11cefbf817c4e86b0/dotnet-hosting-8.0.11-win.exe" -outfile $env:temp\DotNetCore.WindowsHosting.exe
+              Start-Process $env:temp\DotNetCore.WindowsHosting.exe -ArgumentList '/quiet' -Wait
+          
+          - task: IISWebAppDeploymentOnMachineGroup@0
+            displayName: 'website deployed in IIS' 
+            inputs:
+              WebSiteName: 'Default Web Site'
+              Package: '$(pipeline.workspace)\**\*.zip'
+              TakeAppOfflineFlag: true
+              XmlVariableSubstitution: true
+
 
