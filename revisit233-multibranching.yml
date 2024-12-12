@@ -36,8 +36,9 @@ stages:
           publishLocation: 'Container'
 
 
-- stage: CD
-  displayName: StageCD
+- stage: TEST
+  displayName: TEST
+  condition: contains(variables['Build.SourceBranch'],'refs/heads/feature/test')
   jobs:
   - deployment: deployToTest
     displayName: 'TestEnv'
@@ -74,8 +75,12 @@ stages:
               XmlVariableSubstitution: true
 
 
+- stage: DEV
+  dependsOn: TEST
+  displayName: DEV
+  condition: contains(variables['Build.SourceBranch'],'refs/heads/feature/dev')
+  jobs:
   - deployment: deployToDev
-    dependsOn: deployToTest
     displayName: 'DevEnv'
     environment:
       name: 'MymultiPools'
@@ -110,9 +115,13 @@ stages:
               XmlVariableSubstitution: true
 
 
+- stage: PROD
+  displayName: PROD
+  dependsOn: DEV
+  condition: contains(variables['Build.SourceBranch'],'refs/heads/main')
+  jobs:
   - deployment: deployToProd
     displayName: 'ProdEnv'
-    dependsOn: deployToDev
     environment:
       name: MymultiPools
       resourceType: virtualmachine
