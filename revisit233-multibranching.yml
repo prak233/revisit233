@@ -5,7 +5,7 @@ trigger:
         include:
         - main
         - feature/*
-
+    batch: true
 pool:
     vmImage: windows-latest
 
