@@ -36,4 +36,10 @@ stages:
           publishLocation: 'Container'
 
 
+- stage: CD
+  displayName: StageCD
+  jobs:
+  - deployment: deployToTest
+    environment: MymultiPools
+    
 
