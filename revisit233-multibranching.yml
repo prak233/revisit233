@@ -6,6 +6,10 @@ trigger:
         - main
         - feature/*
     batch: true
+pr: 
+  branches:
+    include:
+    - feature/dev 
 pool:
     vmImage: windows-latest
 
