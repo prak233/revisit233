@@ -1,0 +1,29 @@
+#Child pipeline
+# https://aka.ms/yaml
+
+
+parameters:
+  buildConfig: 'xyz'
+
+steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'restoretask - ${{parameters.buildConfig}}'
+      inputs:
+        command: 'restore'
+        projects: '$(projectName)'
+        feedsToUse: 'select'
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'buildtask - ${{parameters.buildConfig}}'
+      inputs:
+        command: 'build'
+        projects: '$(projectName)'
+        arguments: '-c ${{parameters.buildConfig}}'
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'publishtask - ${{parameters.buildConfig}}'
+      inputs:
+        command: 'publish'
+        projects: $(projectName)
+        publishWebProjects: true
+        arguments: '-c ${{parameters.buildConfig}} -o $(build.stagingDirectory)/${{parameters.buildConfig}}'

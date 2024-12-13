@@ -2,7 +2,9 @@
 #reference pipeline
 
 parameters:
+
   buildConfig: 'aq'
+
 
 ##CI Build
 steps:
@@ -24,4 +26,6 @@ steps:
   inputs:
     command: publish
     projects: '**/*.csproj'
+
     arguments: '-c ${{parameters.buildConfig}} -o ${build.StagingDirectory}/${{parameters.buildConfig}}'
+
