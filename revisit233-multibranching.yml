@@ -81,7 +81,7 @@ stages:
 
 
 - stage: DEV
-  dependsOn: TEST
+  dependsOn: CI
   displayName: DEV
   condition: contains(variables['Build.SourceBranch'],'refs/heads/feature/dev')
   jobs:
@@ -122,7 +122,7 @@ stages:
 
 - stage: PROD
   displayName: PROD
-  dependsOn: DEV
+  dependsOn: CI
   condition: contains(variables['Build.SourceBranch'],'refs/heads/main')
   jobs:
   - deployment: deployToProd
