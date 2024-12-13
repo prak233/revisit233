@@ -9,7 +9,10 @@ trigger:
 pr: 
   branches:
     include:
-    - feature/dev 
+    - feature/dev
+    exclude:
+    - feature/test
+    - main 
 pool:
     vmImage: windows-latest
 
