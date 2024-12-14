@@ -2,12 +2,14 @@
 #reference pipeline
 
 parameters:
-  buildConfig: 'aa'
+
+  buildConfig: 'aq'
+
 
 ##CI Build
 steps:
 - task: DotNetCoreCLI@2     ##release
-  displayName: release
+  displayName: restore
   inputs:
     command: restore
     projects: '**/*.csproj'
@@ -22,7 +24,8 @@ steps:
 - task: DotNetCoreCLI@2     ##publish
   displayName: 'publish'
   inputs:
-    command: 'publish'
+    command: publish
     projects: '**/*.csproj'
-    arguments: '-c ${{parameters.buildConfig}} -o $(build.StagingDirectory)/${{parameters.buildConfig}}'
+
+    arguments: '-c ${{parameters.buildConfig}} -o ${build.StagingDirectory}/${{parameters.buildConfig}}'
 
