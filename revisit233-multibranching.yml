@@ -90,7 +90,7 @@ stages:
     environment:
       name: 'MymultiPools'
       resourceType: virtualmachine
-      tags: test
+      tags: dev
     strategy:
       runOnce:
         deploy:
@@ -115,7 +115,7 @@ stages:
             displayName: 'website deployed in IIS'
             inputs:
               WebSiteName: 'Default Web Site'
-              Package: '$(pipeline.workspace)\**\debug\*.zip'
+              Package: '$(pipeline.workspace)\**\backup\*.zip'
               TakeAppOfflineFlag: true
               XmlVariableSubstitution: true
 
