@@ -81,7 +81,7 @@ stages:
 
 
 - stage: DEV
-  dependsOn: TEST
+  dependsOn: CI
   displayName: DEV
   condition: contains(variables['Build.SourceBranch'],'refs/heads/feature/dev')
   jobs:
@@ -90,7 +90,7 @@ stages:
     environment:
       name: 'MymultiPools'
       resourceType: virtualmachine
-      tags: test
+      tags: dev
     strategy:
       runOnce:
         deploy:
@@ -115,14 +115,14 @@ stages:
             displayName: 'website deployed in IIS'
             inputs:
               WebSiteName: 'Default Web Site'
-              Package: '$(pipeline.workspace)\**\debug\*.zip'
+              Package: '$(pipeline.workspace)\**\backup\*.zip'
               TakeAppOfflineFlag: true
               XmlVariableSubstitution: true
 
 
 - stage: PROD
   displayName: PROD
-  dependsOn: DEV
+  dependsOn: CI
   condition: contains(variables['Build.SourceBranch'],'refs/heads/main')
   jobs:
   - deployment: deployToProd
